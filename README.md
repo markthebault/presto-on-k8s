@@ -6,8 +6,8 @@ Blog post create by Joshua that explains the conceptscan be found [here](https:/
 # How to Use
 
 - Build Docker images for Hive Metastore and Presto `make build`
-- Update the file `./02-metastore/s3-secret-yaml.secret` (you can use the example) to add your s3 credentials
-- Change the bucket name in the property `metastore.warehouse.dir` in `./02-metastore/metastore-cm.yaml`
+- Update the file `./kubernetes/02-metastore/s3-secret-yaml.secret` (you can use the example) to add your s3 credentials
+- Change the bucket name in the property `metastore.warehouse.dir` in `./kubernetes/02-metastore/metastore-cm.yaml`
 - Deploy the containers into kubernetes `make deploy`
 - Run some tests `make test`
 

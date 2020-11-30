@@ -2,10 +2,10 @@ build:
 	@sh build_docker_images.sh
 
 deploy:
-	$(MAKE) -c ./deploy deploy
+	$(MAKE) -C ./kubernetes deploy
 
 destroy:
-	$(MAKE) -c ./deploy destroy
+	$(MAKE) -C ./kubernetes destroy
 
 test:
-	cd ./deploy && make run-cli
+	$(MAKE) -C ./kubernetes run-cli
