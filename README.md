@@ -1,48 +1,30 @@
-# presto-on-k8s
-Setup for running Presto with Hive Metastore on Kubernetes as introduced in [this blog post](https://medium.com/@joshua_robinson/presto-powered-s3-data-warehouse-on-kubernetes-aea89d2f40e8).
+# presto-on-k8s development test
+**FORK** from: [joshuarobinson/presto-on-k8s](https://github.com/joshuarobinson/presto-on-k8s)
 
-See [previous blog post](https://medium.com/@joshua_robinson/presto-on-flashblade-s3-486ecb449574)
-for more information about running Presto on FlashBlade.
+Blog post create by Joshua that explains the conceptscan be found [here](https://medium.com/@joshua_robinson/presto-powered-s3-data-warehouse-on-kubernetes-aea89d2f40e8).
 
 # How to Use
 
-1. Build Docker images for Hive Metastore and Presto
+- Build Docker images for Hive Metastore and Presto `make build`
+- Update the file `./02-metastore/s3-secret-yaml.secret` (you can use the example) to add your s3 credentials
+- Change the bucket name in the property `metastore.warehouse.dir` in `./02-metastore/metastore-cm.yaml`
+- Deploy the containers into kubernetes `make deploy`
+- Run some tests `make test`
 
-2. Deploy Hive Metastore: MariaDB (pvs and deployment), init-schemas, Metastore
 
-3. Deploy Presto services (coordinator, workers, and cli)
+# Examples to run
+According to the blog post those are the commends you can run to test your cluster:
+```SQL
+SHOW SCHEMAS FROM tpcds;
+SHOW TABLES FROM tpcds.sf1000;
 
-4. Deploy Redash.
+#create a s3 bucket and set the name there:
+CREATE SCHEMA hive.tpcds WITH (location = 's3a://MY_BUCKET_NAME/warehouse/tpcds/');
 
-Assumptions: working Kubernetes deployment and S3 object store (e.g., FlashBlade).
+CREATE TABLE tpcds.store_sales AS SELECT * FROM tpcds.sf100.store_sales;
 
-Things you may need to modify:
-* Docker repository name ($REPONAME) in build_image scripts and yaml files.
-* DataVIP and access keys for FlashBlade (fs.s3a.endpoint and hive.s3.endpoint)
-* StorageClass for the MariaDB volume.
-* Memory settings and worker counts.
+SELECT COUNT(*) FROM tpcds.store_sales;
+```
 
-# Hive Metastore Service
-
-Dockerfile for Metastore
- * Uses [Hive Metastore Standalone service](https://cwiki.apache.org/confluence/display/Hive/AdminManual+Metastore+3.0+Administration).
-
-Yaml for MariaDB
- * Simple and not optimized.
-
-Yaml for init-schemas
- * One-time K8s job to initiate the MariaDB tables.
-
-Yaml for Metastore
-
-# Presto Coordinator/Workers/CLI
-
-Dockerfile for PrestoSql.
-
-Script: autoconfig_and_launch.sh
- * Generate final presto config files at pod startup time.
-
-Yaml for Presto Coordinator/Workers
-
-Dockerfile for Presto CLI
- * Simple image to make interactive use of Presto easier.
+# Credits
+Thanks for **Joshua Robinson** to have provided such good information regarding hive configuration related to s3!

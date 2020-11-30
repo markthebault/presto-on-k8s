@@ -27,21 +27,13 @@ spec:
     spec:
       containers:
       - name: mariadb
-        image: "mariadb/server:latest"
+        image: "mariadb:10.4.3"
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: mypass
+        - name: MYSQL_DATABASE
+          value: metastore_db
         ports:
         - containerPort: 3306
           name: mysql
-        volumeMounts:
-        - name: mariadb-for-hive
-          mountPath: /var/lib/mysql
-        resources:
-          requests:
-            memory: "8G"
-            cpu: 2
-      volumes:
-      - name: mariadb-for-hive
-        persistentVolumeClaim:
-          claimName: maria-pv-claim
+

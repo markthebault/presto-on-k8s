@@ -1,0 +1,57 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: metastore-cfg
+data:
+  core-site.xml: |
+    <configuration>
+      <property>
+        <name>fs.s3a.connection.ssl.enabled</name>
+        <value>false</value>
+      </property>
+      <property>
+        <name>fs.s3a.endpoint</name>
+        <value>s3.amazonaws.com</value>
+      </property>
+      <property>
+        <name>fs.s3a.fast.upload</name>
+        <value>true</value>
+      </property>
+    </configuration>
+
+  metastore-site.xml: |
+    <configuration>
+      <property>
+        <name>metastore.task.threads.always</name>
+        <value>org.apache.hadoop.hive.metastore.events.EventCleanerTask</value>
+      </property>
+      <property>
+        <name>metastore.expression.proxy</name>
+        <value>org.apache.hadoop.hive.metastore.DefaultPartitionExpressionProxy</value>
+      </property>
+      <property>
+        <name>javax.jdo.option.ConnectionDriverName</name>
+        <value>com.mysql.jdbc.Driver</value>
+      </property>
+      <property>
+        <name>javax.jdo.option.ConnectionURL</name>
+        <value>jdbc:mysql://metastore-db:13306/metastore_db</value>
+      </property>
+      <property>
+        <name>javax.jdo.option.ConnectionUserName</name>
+        <value>root</value>
+      </property>
+      <property>
+        <name>javax.jdo.option.ConnectionPassword</name>
+        <value>mypass</value>
+      </property>
+      <property>
+        <name>metastore.warehouse.dir</name>
+        <value>s3a://mth-dlk-metastore/warehouse/</value>
+      </property>
+      <property>
+        <name>metastore.thrift.port</name>
+        <value>9083</value>
+      </property>
+    </configuration>
+

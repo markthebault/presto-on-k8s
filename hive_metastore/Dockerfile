@@ -2,7 +2,7 @@ FROM openjdk:8-slim
 
 ARG HADOOP_VERSION=3.2.0
 
-RUN apt-get update && apt-get install -y curl --no-install-recommends \
+RUN apt-get update && apt-get install -y netcat curl --no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Download and extract the Hadoop binary package.

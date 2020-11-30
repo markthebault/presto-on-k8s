@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hive-initschema
+spec:
+  template:
+    spec:
+      containers:
+      - name: hivemeta
+        image: markthebault/hivemetastore
+        command: ["/bin/bash"]
+        args:
+          - "-c"
+          - "while ! echo exit | nc metastore-db 13306; do sleep 10; done && /opt/hive-metastore/bin/schematool --verbose -initSchema -dbType mysql -userName root -passWord mypass -url jdbc:mysql://metastore-db:13306/metastore_db?createDatabaseIfNotExist=false"
+          # - "/opt/hive-metastore/bin/schematool --verbose -initSchema -dbType mysql -userName root -passWord mypass -url jdbc:mysql://metastore-db:13306/metastore_db?createDatabaseIfNotExist=false"
+        
+          #   "-passWord", "mypass" , "-url", "jdbc:mysql://metastore-db:13306/metastore_db?createDatabaseIfNotExist=false"]
+        # command: ["/opt/hive-metastore/bin/schematool"]
+        # args: ["--verbose" ,"-initSchema" , "-dbType", "mysql" , "-userName", "root",
+        #   "-passWord", "mypass" , "-url", "jdbc:mysql://metastore-db:13306/metastore_db?createDatabaseIfNotExist=false"]
+      restartPolicy: Never
+  backoffLimit: 4
