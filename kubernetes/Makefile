@@ -6,6 +6,7 @@ deploy:
 	kubectl -n $(K8S_NS) wait --for=condition=complete --timeout=300s job/hive-initschema
 
 	kubectl -n $(K8S_NS) apply -f ./02-metastore/s3-secret.yaml.secret
+	kubectl -n $(K8S_NS) apply -f ./02-metastore/azuresa-secret.yaml.secret
 	kubectl -n $(K8S_NS) apply -f ./02-metastore/
 
 	kubectl -n $(K8S_NS) apply -f ./03-presto/
@@ -14,7 +15,12 @@ destroy:
 	kubectl -n $(K8S_NS) delete -f ./03-presto/
 	kubectl -n $(K8S_NS) delete -f ./02-metastore/
 	kubectl -n $(K8S_NS) delete -f ./02-metastore/s3-secret.yaml.secret
+	kubectl -n $(K8S_NS) delete -f ./02-metastore/azuresa-secret.yaml.secret
+
 	kubectl -n $(K8S_NS) delete -f ./01-database
 
 run-cli:
 	kubectl -n $(K8S_NS) exec -it pod/presto-cli -- /opt/presto-cli --server presto:8080 --catalog hive --schema default
+
+show-ui:
+	kubectl -n $(K8S_NS) port-forward svc/presto 8080:8080 
