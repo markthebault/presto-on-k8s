@@ -3,10 +3,11 @@
 set -e
 
 REPONAME=markthebault
-PRESTOVER=337
+PRESTOVER=345
+HADOOP_VERSION=3.2.0
 
 # Build hive metastore server
-docker build -t $REPONAME/hivemetastore ./docker/hive_metastore
+docker build --build-arg HADOOP_VERSION=$HADOOP_VERSION -t $REPONAME/hivemetastore ./docker/hive_metastore
 docker push $REPONAME/hivemetastore
 
 
