@@ -17,7 +17,6 @@ data:
         <name>fs.s3a.fast.upload</name>
         <value>true</value>
       </property>
-
       <property>
         <name>fs.azure.account.auth.type.fsmthdlk.dfs.core.windows.net</name>
         <value>SharedKey</value>
