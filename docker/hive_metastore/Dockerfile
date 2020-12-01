@@ -2,7 +2,7 @@ FROM openjdk:8-slim
 
 ARG HADOOP_VERSION=3.2.0
 
-RUN apt-get update && apt-get install -y netcat curl --no-install-recommends \
+RUN apt-get update && apt-get install -y netcat curl gettext-base --no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Download and extract the Hadoop binary package.
@@ -14,6 +14,13 @@ RUN curl https://archive.apache.org/dist/hadoop/core/hadoop-$HADOOP_VERSION/hado
 # Add S3a jars to the classpath using this hack.
 RUN ln -s /opt/hadoop/share/hadoop/tools/lib/hadoop-aws* /opt/hadoop/share/hadoop/common/lib/ && \
     ln -s /opt/hadoop/share/hadoop/tools/lib/aws-java-sdk* /opt/hadoop/share/hadoop/common/lib/
+
+# Add Azure jars to the classpath using this hack.
+RUN ln -s /opt/hadoop/share/hadoop/tools/lib/hadoop-azure* /opt/hadoop/share/hadoop/common/lib/ && \
+    ln -s /opt/hadoop/share/hadoop/tools/lib/azure* /opt/hadoop/share/hadoop/common/lib/
+
+# Add SSL support
+RUN ln -s /opt/hadoop/share/hadoop/tools/lib/wildfly* /opt/hadoop/share/hadoop/common/lib/
 
 # Set necessary environment variables. 
 ENV HADOOP_HOME="/opt/hadoop"
@@ -29,3 +36,9 @@ RUN curl -L https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java
 	| tar xvz -C /opt/ \
 	&& ln -s /opt/mysql-connector-java-5.1.47/mysql-connector-java-5.1.47.jar /opt/hadoop/share/hadoop/common/lib/ \
 	&& ln -s /opt/mysql-connector-java-5.1.47/mysql-connector-java-5.1.47.jar /opt/hive-metastore/lib/ 
+
+
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+ENV METASTORE_PORT=9093
+CMD ["/start.sh"]
