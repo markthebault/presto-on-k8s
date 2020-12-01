@@ -37,7 +37,8 @@ RUN curl -L https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java
 	&& ln -s /opt/mysql-connector-java-5.1.47/mysql-connector-java-5.1.47.jar /opt/hadoop/share/hadoop/common/lib/ \
 	&& ln -s /opt/mysql-connector-java-5.1.47/mysql-connector-java-5.1.47.jar /opt/hive-metastore/lib/ 
 
-
+COPY core-site.xml /opt/hadoop/etc/hadoop/core-site.xml.tmpl
+COPY metastore-site.xml /opt/hive-metastore/conf/metastore-site.xml.tmpl
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 ENV METASTORE_PORT=9093
