@@ -22,7 +22,7 @@ data:
         <value>SharedKey</value>
       </property>
       <property>
-        <name>fs.azure.account.key.mthdlk.dfs.core.windows.net</name>
+        <name>fs.azure.account.key.fsmthdlk.dfs.core.windows.net</name>
         <value>$ARM_SA_KEY</value>
       </property>
     </configuration>
