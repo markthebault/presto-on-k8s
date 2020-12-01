@@ -41,5 +41,4 @@ COPY core-site.xml /opt/hadoop/etc/hadoop/core-site.xml.tmpl
 COPY metastore-site.xml /opt/hive-metastore/conf/metastore-site.xml.tmpl
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
-ENV METASTORE_PORT=9093
 CMD ["/start.sh"]
