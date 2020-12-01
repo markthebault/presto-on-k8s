@@ -38,17 +38,25 @@ spec:
             secretKeyRef:
               name: my-s3-keys
               key: secret-key
+        - name: ARM_SA_NAME
+          valueFrom:
+            secretKeyRef:
+              name: azure-sa-keys
+              key: storage-account
+        - name: ARM_SA_KEY
+          valueFrom:
+            secretKeyRef:
+              name: azure-sa-keys
+              key: storage-account-key
         ports:
         - containerPort: 9083
         volumeMounts:
         - name: metastore-cfg-vol
-          mountPath: /opt/hive-metastore/conf/metastore-site.xml
+          mountPath: /opt/hive-metastore/conf/metastore-site.xml.tmpl
           subPath: metastore-site.xml
         - name: metastore-cfg-vol
-          mountPath: /opt/hadoop/etc/hadoop/core-site.xml
+          mountPath: /opt/hadoop/etc/hadoop/core-site.xml.tmpl
           subPath: core-site.xml
-        command: ["/opt/hive-metastore/bin/start-metastore"]
-        args: ["-p", "9083"]
         resources: {}
         imagePullPolicy: Always
       volumes:
