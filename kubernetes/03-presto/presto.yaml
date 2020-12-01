@@ -40,6 +40,16 @@ spec:
             secretKeyRef:
               name: my-s3-keys
               key: secret-key
+        - name: ARM_SA_NAME
+          valueFrom:
+            secretKeyRef:
+              name: azure-sa-keys
+              key: storage-account
+        - name: ARM_SA_KEY
+          valueFrom:
+            secretKeyRef:
+              name: azure-sa-keys
+              key: storage-account-key
         volumeMounts:
         - name: presto-cfg-vol
           mountPath: /opt/presto-server/etc/config.properties
@@ -87,6 +97,16 @@ spec:
             secretKeyRef:
               name: my-s3-keys
               key: secret-key
+        - name: ARM_SA_NAME
+          valueFrom:
+            secretKeyRef:
+              name: azure-sa-keys
+              key: storage-account
+        - name: ARM_SA_KEY
+          valueFrom:
+            secretKeyRef:
+              name: azure-sa-keys
+              key: storage-account-key
         volumeMounts:
         - name: presto-cfg-vol
           mountPath: /opt/presto-server/etc/config.properties
