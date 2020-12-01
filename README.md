@@ -16,12 +16,12 @@ Blog post create by Joshua that explains the conceptscan be found [here](https:/
 According to the blog post those are the commends you can run to test your cluster:
 ```SQL
 SHOW SCHEMAS FROM tpcds;
-SHOW TABLES FROM tpcds.sf1000;
+SHOW TABLES FROM tpcds.sf1;
 
 #create a s3 bucket and set the name there:
 CREATE SCHEMA hive.tpcds WITH (location = 's3a://MY_BUCKET_NAME/warehouse/tpcds/');
 
-CREATE TABLE tpcds.store_sales AS SELECT * FROM tpcds.sf100.store_sales;
+CREATE TABLE tpcds.store_sales AS SELECT * FROM tpcds.sf1.store_sales;
 
 SELECT COUNT(*) FROM tpcds.store_sales;
 ```
