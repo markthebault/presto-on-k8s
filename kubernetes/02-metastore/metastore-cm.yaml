@@ -17,6 +17,15 @@ data:
         <name>fs.s3a.fast.upload</name>
         <value>true</value>
       </property>
+
+      <property>
+        <name>fs.azure.account.auth.type.fsmthdlk.dfs.core.windows.net</name>
+        <value>SharedKey</value>
+      </property>
+      <property>
+        <name>fs.azure.account.key.mthdlk.dfs.core.windows.net</name>
+        <value>$ARM_SA_KEY</value>
+      </property>
     </configuration>
 
   metastore-site.xml: |
