@@ -57,6 +57,7 @@ spec:
         - name: metastore-cfg-vol
           mountPath: /opt/hadoop/etc/hadoop/core-site.xml.tmpl
           subPath: core-site.xml
+        command: ["/start.sh"]
         resources: {}
         imagePullPolicy: Always
       volumes:
