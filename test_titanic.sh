@@ -31,4 +31,4 @@ WITH (
 
 
 #### Azure
-CREATE SCHEMA hive.tpcds WITH (location = 'abfs://raw@fsmthdlk.dfs.core.windows.net/metastore/tpcds');
+CREATE SCHEMA hive.tpcds WITH (location = 'abfss://raw@fsmthdlk.dfs.core.windows.net/warehouse/tpcds');
