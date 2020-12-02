@@ -1,9 +1,9 @@
 {{ $dbPass := "MyAwesomePassword123" }}
 releases:
+############## PRESTO
   - name: mariadb-metastore-backend
     chart: bitnami/mariadb
     version: 9.0.1
-    namespace: mth
     installed: true
     set:
       - name: auth.database
@@ -15,7 +15,6 @@ releases:
 
   - name: hive-metastore
     chart: ../../charts/hive-metastore
-    namespace: mth
     installed: true
     set:
       - name: mysqlBackend.host
@@ -56,7 +55,6 @@ releases:
   
   - name: presto
     chart: ../../charts/presto-chart
-    namespace: mth
     installed: true
     values:
       - hiveProperties:
@@ -110,3 +108,31 @@ releases:
             requests:
               cpu: 1800m
               memory: 3690Mi
+
+
+################ METABASE
+
+  - name: mariadb-metabase-backend
+    chart: bitnami/mariadb
+    version: 9.0.1
+    installed: true
+    set:
+      - name: auth.database
+        value: metabase
+      - name: auth.rootPassword
+        value: {{ $dbPass }}
+      - name: primary.persistence.storageClass
+        value: managed-premium
+
+  - name: metabase
+    chart: pmint93/metabase
+    version: 0.13.1
+    installed: true
+    values:
+      - database:
+          type: mysql
+          host: mariadb-metabase-backend
+          port: 3306
+          username: root
+          password: {{ $dbPass }}
+          dbname: metabase
