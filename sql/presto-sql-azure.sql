@@ -52,3 +52,14 @@ SELECT
   cast(improvement_surcharge as DECIMAL(8, 2)) as improvement_surcharge,
   cast(total_amount as DECIMAL(8, 2)) as total_amount
 FROM hive.samples.tlc_yellow_trips_2018 ;
+
+-- Run some sample query
+SELECT * FROM hive.samples_parq.tlc_yellow_trips_2018 LIMIT 10;
+
+
+-- Select the amount of cash generated per day and save it to a table
+CREATE TABLE hive.samples_parq.money_per_day COMMENT 'Total money spent per day on taxi rides in 2018'
+WITH (FORMAT = 'PARQUET')
+AS SELECT day_of_year(tpep_pickup_datetime) as d_day, SUM(total_amount) as money_spend
+  FROM hive.samples_parq.tlc_yellow_trips_2018 
+  GROUP BY day_of_year(tpep_pickup_datetime);
