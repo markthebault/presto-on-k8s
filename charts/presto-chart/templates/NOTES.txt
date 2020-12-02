@@ -11,5 +11,8 @@
 2. show the UI of the presto coordinator
 kubectl --namespace {{ .Release.Namespace }} port-forward svc/{{ include "presto.fullname" . }} {{ .Values.coordinator.service.port }}:{{ .Values.coordinator.service.port }}
 
+
+{{- if .Values.prestoCli.enabled -}}
 3. Execute some commands using presto cli (feel free to change the catalog which is set to 'hive' in this example)
-kubectl -n $(K8S_NS) exec -it pod/{{ include "presto.fullname" . }}-cli -- /opt/presto-cli --server {{ include "presto.fullname" . }}:{{ .Values.coordinator.service.port }} --catalog hive --schema default
+kubectl -n {{ .Release.Namespace }} exec -it pod/{{ include "presto.fullname" . }}-cli -- /opt/presto-cli --server {{ include "presto.fullname" . }}:{{ .Values.coordinator.service.port }} --catalog hive --schema default
+{{- end -}}

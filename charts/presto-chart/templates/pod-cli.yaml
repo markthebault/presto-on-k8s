@@ -1,3 +1,4 @@
+{{- if .Values.prestoCli.enabled -}}
 apiVersion: v1
 kind: Pod
 metadata:
@@ -5,8 +6,9 @@ metadata:
 spec:
   containers:
   - name: presto-cli
-    image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+    image: "{{ .Values.prestoCli.image }}"
     imagePullPolicy: {{ .Values.image.pullPolicy }}
     command: ["tail", "-f", "/dev/null"]
     imagePullPolicy: Always
   restartPolicy: Always
+{{- end -}}
