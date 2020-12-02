@@ -74,40 +74,40 @@ coordinator:
     port: 8080
   resources:
     # limits:
-    #   cpu: 4000m
-    #   memory: 8192Mi
+    #   cpu: 3600m
+    #   memory: 7370Mi
     # requests:
-    #   cpu: 2000m
-    #   memory: 4096Mi
+    #   cpu: 1800m
+    #   memory: 3690Mi
   
   #extra configuration passed to config.properties
   confPropertiesExtras:
-    query.max-memory: 12GB
-    query.max-memory-per-node: 3GB
-    query.max-total-memory-per-node: 4GB
+    query.max-memory: 70GB
+    query.max-memory-per-node: 7GB
+    query.max-total-memory-per-node: 8GB
     query.max-stage-count: 200
     task.writer-count: 4
 
 workers:
   resources: {}
     # limits:
-    #   cpu: 4000m
-    #   memory: 8192Mi
+    #   cpu: 3600m
+    #   memory: 7370Mi
     # requests:
-    #   cpu: 2000m
-    #   memory: 4096Mi
+    #   cpu: 1800m
+    #   memory: 3690Mi
   replicaCount: 3
   autoscaling:
     enabled: false
     minReplicas: 1
     maxReplicas: 10
-    targetCPUUtilizationPercentage: 80
+    targetCPUUtilizationPercentage: 65
     targetMemoryUtilizationPercentage: 60
   
   #extra configuration passed to config.properties
   confPropertiesExtras:
-    query.max-memory: 12GB
-    query.max-memory-per-node: 3GB
-    query.max-total-memory-per-node: 4GB
+    query.max-memory: 70GB
+    query.max-memory-per-node: 7GB
+    query.max-total-memory-per-node: 8GB
     query.max-stage-count: 200
     task.writer-count: 4
