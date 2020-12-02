@@ -92,3 +92,21 @@ releases:
             secretKeyRef:
               name: azure-sa-keys
               key: storage-account-key
+      - workers:
+          autoscaling:
+            enabled: true
+          resources:
+            limits:
+              cpu: 3600m
+              memory: 7370Mi
+            requests:
+              cpu: 1800m
+              memory: 3690Mi
+      - coordinator:
+          resources:
+            limits:
+              cpu: 3600m
+              memory: 7370Mi
+            requests:
+              cpu: 1800m
+              memory: 3690Mi
