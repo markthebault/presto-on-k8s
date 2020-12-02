@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "hive-metastore.fullname" . }}-hive-initschema-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: hivemeta
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["/bin/bash"]
+        args:
+          - "-c"
+          - "while ! echo exit | nc {{ .Values.mysqlBackend.host }} {{ .Values.mysqlBackend.port }}; do sleep 10; done && /opt/hive-metastore/bin/schematool --verbose -initSchema -dbType mysql -userName {{ .Values.mysqlBackend.user }} -passWord {{ .Values.mysqlBackend.password }} -url jdbc:mysql://{{ .Values.mysqlBackend.host }}:{{ .Values.mysqlBackend.port }}/{{ .Values.mysqlBackend.database }}?createDatabaseIfNotExist=false"
+      restartPolicy: Never
+  backoffLimit: 4

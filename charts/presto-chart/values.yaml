@@ -1,0 +1,104 @@
+# Default values for presto.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+image:
+  repository: markthebault/fb-presto
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: latest
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+
+globalEnvs: []
+
+hiveProperties:
+# hiveProperties: |
+#   connector.name: hive-hadoop2
+#   hive.metastore-cache-ttl: 20m
+#   hive.non-managed-table-writes-enabled: false
+#   hive.s3-file-system-type: PRESTO
+#   hive.hdfs.impersonation.enabled: true
+#   hive.metastore: glue
+
+nodeProperties:
+  node.environment: test
+  node.data-dir: /var/presto/data
+  spiller-spill-path: /tmp
+  max-spill-per-node: 4TB
+  query-max-spill-per-node: 1TB
+
+coordinator:
+  ingress:
+    enabled: false
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: chart-example.local
+        paths: []
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  service:
+    type: ClusterIP
+    port: 8080
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+  
+  #extra configuration passed to config.properties
+  confPropertiesExtras:
+    query.max-memory: 200GB
+    query.max-memory-per-node: 8GB
+    query.max-total-memory-per-node: 10GB
+    query.max-stage-count: 200
+    task.writer-count: 4
+
+workers:
+  resources: {}
+  replicaCount: 3
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 60
+  
+  #extra configuration passed to config.properties
+  confPropertiesExtras:
+    query.max-memory: 200GB
+    query.max-memory-per-node: 8GB
+    query.max-total-memory-per-node: 10GB
+    query.max-stage-count: 200
+    task.writer-count: 4

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name:  {{ include "presto.fullname" . }}-catalog-cm
+  labels:
+    {{- include "presto.labels" . | nindent 4 }}
+data:
+  hive.properties.template: |
+      {{- if index .Values "hiveProperties" }}
+      {{- range $key, $value := index .Values "hiveProperties" }}
+      {{ $key }}={{ $value }}
+      {{- end }}
+      {{- end }}

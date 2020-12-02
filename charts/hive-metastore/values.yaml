@@ -1,0 +1,108 @@
+# Default values for hive-metastore.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  repository: markthebault/hivemetastore
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: latest
+
+service:
+  type: ClusterIP
+  port: 9083
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths: []
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+
+resources: {}
+  # limits:
+  #   cpu: 4000m
+  #   memory: 8192Mi
+  # requests:
+  #   cpu: 2000m
+  #   memory: 4096Mi
+
+replicaCount: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  # targetMemoryUtilizationPercentage: 80
+
+env: []
+  # - name: AWS_ACCESS_KEY_ID
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: my-s3-keys
+  #       key: access-key
+  # - name: AWS_SECRET_ACCESS_KEY
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: my-s3-keys
+  #       key: secret-key
+  # - name: ARM_SA_NAME
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: azure-sa-keys
+  #       key: storage-account
+  # - name: ARM_SA_KEY
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: azure-sa-keys
+  #       key: storage-account-key
+
+mysqlBackend:
+  host: metastore-db
+  port: 3306
+  database: metastore_db
+  user: root
+  password: mypass
+
+hiveConf:
+  metastoreWarehouseDir: s3a://MY_BUCKET/warehouse/
+
+  #values containing '$' will be replaced by corresponding env vars
+  coreSiteExtras:
+    # fs.s3a.connection.ssl.enabled: false
+    # fs.s3a.endpoint: s3.amazonaws.com
+    # fs.s3a.fast.upload: true
+
+  #values containing '$' will be replaced by corresponding env vars
+  metastoreSiteExtras:
+
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

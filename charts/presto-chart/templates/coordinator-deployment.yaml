@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "presto.fullname" . }}-coordinator
+  labels:
+    {{- include "presto.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "presto.selectorLabelsCoordinator" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "presto.selectorLabelsCoordinator" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.coordinator.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.coordinator.resources | nindent 12 }}
+          env:
+            {{- toYaml .Values.globalEnvs | nindent 12 }}
+
+          volumeMounts:
+            - name: presto-cfg-vol
+              mountPath: /opt/presto-server/etc/config.properties
+              subPath: config.properties.coordinator
+            - name: presto-cfg-vol
+              mountPath: /opt/presto-server/etc/node.properties.template
+              subPath: node.properties.template
+            - name: catalog-cfg-vol
+              mountPath: /opt/presto-server/etc/catalog/hive.properties.template
+              subPath: hive.properties.template
+          command: ['/opt/autoconfig_and_launch.sh']
+      volumes:
+        - name: presto-cfg-vol
+          configMap:
+            name: {{ include "presto.fullname" . }}-cm
+        - name: catalog-cfg-vol
+          configMap:
+            name: {{ include "presto.fullname" . }}-catalog-cm
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

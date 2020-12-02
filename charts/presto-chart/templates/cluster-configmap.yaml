@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name:  {{ include "presto.fullname" . }}-cm
+  labels:
+    {{- include "presto.labels" . | nindent 4 }}
+data:
+  config.properties.coordinator: |
+    coordinator=true
+    discovery.uri=http://{{ include "presto.fullname" . }}:{{ .Values.coordinator.service.port }}
+    http-server.http.port={{ .Values.coordinator.service.port }}
+    node-scheduler.include-coordinator=false
+    discovery-server.enabled=true
+
+    {{- if index .Values.coordinator "confPropertiesExtras" }}
+    {{- range $key, $value := index .Values.coordinator "confPropertiesExtras" }}
+    {{ $key }}={{ $value }}
+    {{- end }}
+    {{- end }}
+
+  config.properties.worker: |
+    coordinator=false
+    http-server.http.port={{ .Values.coordinator.service.port }}
+    discovery.uri=http://{{ include "presto.fullname" . }}:{{ .Values.coordinator.service.port }}
+
+    {{- if index .Values.workers "confPropertiesExtras" }}
+    {{- range $key, $value := index .Values.workers "confPropertiesExtras" }}
+    {{ $key }}={{ $value }}
+    {{- end }}
+    {{- end }}
+
+  node.properties.template: |
+    {{- if index .Values "nodeProperties" }}
+    {{- range $key, $value := index .Values "nodeProperties" }}
+    {{ $key }}={{ $value }}
+    {{- end }}
+    {{- end }}

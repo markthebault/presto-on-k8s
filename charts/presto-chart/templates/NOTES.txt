@@ -1,0 +1,15 @@
+1. Get the application URL by running these commands:
+{{- if .Values.coordinator.ingress.enabled }}
+{{- range $host := .Values.coordinator.ingress.hosts }}
+  {{- range .paths }}
+  http{{ if $.Values.coordinator.ingress.tls }}s{{ end }}://{{ $host.host }}{{ . }}
+  {{- end }}
+{{- end }}
+{{- end }}
+
+
+2. show the UI of the presto coordinator
+kubectl --namespace {{ .Release.Namespace }} port-forward svc/{{ include "presto.fullname" . }} {{ .Values.coordinator.service.port }}:{{ .Values.coordinator.service.port }}
+
+3. Execute some commands using presto cli (feel free to change the catalog which is set to 'hive' in this example)
+kubectl -n $(K8S_NS) exec -it pod/{{ include "presto.fullname" . }}-cli -- /opt/presto-cli --server {{ include "presto.fullname" . }}:{{ .Values.coordinator.service.port }} --catalog hive --schema default

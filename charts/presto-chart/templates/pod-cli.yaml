@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "presto.fullname" . }}-cli
+spec:
+  containers:
+  - name: presto-cli
+    image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+    imagePullPolicy: {{ .Values.image.pullPolicy }}
+    command: ["tail", "-f", "/dev/null"]
+    imagePullPolicy: Always
+  restartPolicy: Always
