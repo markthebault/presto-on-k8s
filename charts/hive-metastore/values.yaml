@@ -9,7 +9,7 @@ image:
   repository: markthebault/hivemetastore
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: latest
+  tag: "3.0.0"
 
 service:
   type: ClusterIP
