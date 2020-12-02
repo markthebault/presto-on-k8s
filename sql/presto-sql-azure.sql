@@ -28,7 +28,7 @@ WITH (
 SELECT * FROM hive.samples.tlc_yellow_trips_2018 LIMIT 10;
 
 -- Convert dataset to parquet
-CREATE SCHEMA hive.samples_parq WITH (location = 'abfss://raw@fsmthdlk.dfs.core.windows.net/warehouse/samples/');
+CREATE SCHEMA hive.samples_parq WITH (location = 'abfss://raw@fsmthdlk.dfs.core.windows.net/warehouse/samples_parq/');
 
 CREATE TABLE hive.samples_parq.tlc_yellow_trips_2018 COMMENT '2018 Newyork City taxi data'
 WITH (FORMAT = 'PARQUET')
