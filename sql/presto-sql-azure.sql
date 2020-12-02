@@ -63,3 +63,17 @@ WITH (FORMAT = 'PARQUET')
 AS SELECT day_of_year(tpep_pickup_datetime) as d_day, SUM(total_amount) as money_spend
   FROM hive.samples_parq.tlc_yellow_trips_2018 
   GROUP BY day_of_year(tpep_pickup_datetime);
+
+-- Select the amount of cash generated per day of week and save it to a table
+CREATE TABLE hive.samples_parq.money_per_day_of_week COMMENT 'Total money spent per day on taxi rides in 2018'
+WITH (FORMAT = 'PARQUET')
+AS SELECT day_of_week(tpep_pickup_datetime) as d_day, SUM(total_amount) as money_spend
+  FROM hive.samples_parq.tlc_yellow_trips_2018 
+  GROUP BY day_of_week(tpep_pickup_datetime);
+
+-- Select the amount of cash generated per day of month and save it to a table
+CREATE TABLE hive.samples_parq.money_per_day_of_month COMMENT 'Total money spent per day on taxi rides in 2018'
+WITH (FORMAT = 'PARQUET')
+AS SELECT day_of_month(tpep_pickup_datetime) as d_day, SUM(total_amount) as money_spend
+  FROM hive.samples_parq.tlc_yellow_trips_2018 
+  GROUP BY day_of_month(tpep_pickup_datetime);
