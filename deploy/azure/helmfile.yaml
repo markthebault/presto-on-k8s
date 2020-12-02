@@ -1,0 +1,94 @@
+{{ $dbPass := "MyAwesomePassword123" }}
+releases:
+  - name: mariadb-metastore-backend
+    chart: bitnami/mariadb
+    version: 9.0.1
+    namespace: mth
+    installed: true
+    set:
+      - name: auth.database
+        value: metastore_db
+      - name: auth.rootPassword
+        value: {{ $dbPass }}
+      - name: primary.persistence.storageClass
+        value: managed-premium
+
+  - name: hive-metastore
+    chart: ../../charts/hive-metastore
+    namespace: mth
+    installed: true
+    set:
+      - name: mysqlBackend.host
+        value: mariadb-metastore-backend
+      - name: mysqlBackend.password
+        value: {{ $dbPass }}
+    values:
+      - hiveConf: 
+          metastoreWarehouseDir: abfss://raw@fsmthdlk.dfs.core.windows.net/warehouse/
+          coreSiteExtras:
+            coreSiteExtras:
+            fs.s3a.connection.ssl.enabled: false
+            fs.s3a.endpoint: s3.amazonaws.com
+            fs.s3a.fast.upload: true
+            fs.azure.account.auth.type.fsmthdlk.dfs.core.windows.net: SharedKey
+            fs.azure.account.key.fsmthdlk.dfs.core.windows.net: $ARM_SA_KEY
+      - env:
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: my-s3-keys
+              key: access-key
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: my-s3-keys
+              key: secret-key
+        - name: ARM_SA_NAME
+          valueFrom:
+            secretKeyRef:
+              name: azure-sa-keys
+              key: storage-account
+        - name: ARM_SA_KEY
+          valueFrom:
+            secretKeyRef:
+              name: azure-sa-keys
+              key: storage-account-key
+  
+  - name: presto
+    chart: ../../charts/presto-chart
+    namespace: mth
+    installed: true
+    values:
+      - hiveProperties:
+          connector.name: hive-hadoop2
+          hive.metastore.uri: thrift://hive-metastore:9083
+
+          hive.allow-drop-table: true
+          hive.max-partitions-per-scan: "1000000"
+          hive.compression-codec: NONE
+
+          hive.s3.endpoint: s3.amazonaws.com
+          hive.s3.path-style-access: true
+          hive.s3.ssl.enabled: true
+          hive.s3.max-connections: 100
+      - globalEnvs:
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: my-s3-keys
+              key: access-key
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: my-s3-keys
+              key: secret-key
+        - name: ARM_SA_NAME
+          valueFrom:
+            secretKeyRef:
+              name: azure-sa-keys
+              key: storage-account
+        - name: ARM_SA_KEY
+          valueFrom:
+            secretKeyRef:
+              name: azure-sa-keys
+              key: storage-account-key
